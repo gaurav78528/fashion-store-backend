@@ -21,7 +21,7 @@ const app = express();
 // Middlewares
 // app.use(morgan("dev"));
 app.use(express.json());
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: "https://fashiion-store.vercel.app" }));
 app.use(cookieParser());
 // Routes
 
