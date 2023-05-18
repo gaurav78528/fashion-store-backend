@@ -4,6 +4,7 @@ const { connection } = require("./config/db");
 const { userRouter } = require("./routes/user.route");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const path = require("path");
 const { authenticate } = require("./middlewares/authenticate.middleware");
 const { productsRouter } = require("./routes/products.route");
 const { wishlistRouter } = require("./routes/wishlist.route");
@@ -21,7 +22,7 @@ const app = express();
 // Middlewares
 // app.use(morgan("dev"));
 app.use(express.json());
-app.use(cors({ credentials: true, origin: "https://fashiion-store.vercel.app" }));
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(cookieParser());
 // Routes
 
@@ -32,6 +33,11 @@ app.use("/wishlist", wishlistRouter);
 app.use("/orders", orderRouter);
 app.use("/payment", paymentRouter);
 
+
+app.use(express.static(path.join(__dirname,'../fashion-store/build')))
+app.get('*',(req,res)=>{
+res.sendFile(path.join(__dirname,'../fashion-store/build/index.html'))
+})
 // Rest API
 app.get("/", (req, res) => {
   res.send({ message: "Welcome to Home Page" });

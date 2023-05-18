@@ -1,1 +1,0 @@
-# fashion-store-backend
