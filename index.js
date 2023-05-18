@@ -33,11 +33,16 @@ app.use("/wishlist", wishlistRouter);
 app.use("/orders", orderRouter);
 app.use("/payment", paymentRouter);
 
+app.use(express.static(path.join(__dirname, "../fashion-store/build")));
+app.get("*", (req, res) => {
+  const index = path.join(
+    _dirname,
+    "build",
+    "../fashion-store/build/index.html"
+  );
+  res.sendFile(index);
+});
 
-app.use(express.static(path.join(__dirname,'../fashion-store/build')))
-app.get('*',(req,res)=>{
-res.sendFile(path.join(__dirname,'../fashion-store/build/index.html'))
-})
 // Rest API
 app.get("/", (req, res) => {
   res.send({ message: "Welcome to Home Page" });
