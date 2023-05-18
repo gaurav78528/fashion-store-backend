@@ -38,7 +38,7 @@ app.get("*", (req, res) => {
   const index = path.join(
     _dirname,
     "build",
-    "../fashion-store/build/index.html"
+    "index.html"
   );
   res.sendFile(index);
 });
