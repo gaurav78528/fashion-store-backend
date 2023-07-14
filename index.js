@@ -1,10 +1,9 @@
 const express = require("express");
-const morgan = require("morgan");
+const path = require("path");
 const { connection } = require("./config/db");
 const { userRouter } = require("./routes/user.route");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const path = require("path");
 const { authenticate } = require("./middlewares/authenticate.middleware");
 const { productsRouter } = require("./routes/products.route");
 const { wishlistRouter } = require("./routes/wishlist.route");
@@ -21,6 +20,13 @@ const app = express();
 
 // Middlewares
 // app.use(morgan("dev"));
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
+
 app.use(express.json());
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(cookieParser());
@@ -33,19 +39,18 @@ app.use("/wishlist", wishlistRouter);
 app.use("/orders", orderRouter);
 app.use("/payment", paymentRouter);
 
-app.use(express.static(path.join(__dirname, "../fashion-store/build")));
-app.get("*", (req, res) => {
-  const index = path.join(
-    _dirname,
-    "build",
-    "index.html"
-  );
-  res.sendFile(index);
+// Rest API
+app.get("/checkhealth", (req, res) => {
+  res.send({ message: "Fashion is live" });
 });
 
-// Rest API
-app.get("/", (req, res) => {
-  res.send({ message: "Welcome to Home Page" });
+// All remaining requests return the React app, so it can handle routing.
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../client/build/index.html"));
+});
+
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.listen(PORT, async () => {
